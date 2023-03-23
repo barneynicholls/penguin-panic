@@ -21,18 +21,12 @@ public class ClickToDropFish : MonoBehaviour
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit))
             {
                 var position = hit.point;
-                position.y += 10f;
+                position.y += 20f;
 
                 var fish = Instantiate(fishPrefab, position, Quaternion.identity);
 
-                foreach (var agent in agents)
-                {
-                    var agentScript = agent.GetComponent<PenguinAI>();
-                    if (agentScript is not null)
-                    {
-                        agentScript.fishDropped(hit.point);
-                    }
-                }
+                var fishScript = fish.GetComponent<Fish>();
+                if (fishScript is not null) fishScript.setAgents(agents);
             }
         }
     }

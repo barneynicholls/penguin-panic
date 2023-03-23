@@ -6,8 +6,7 @@ public class PenguinAI : MonoBehaviour
 {
     private NavMeshAgent agent;
 
-    [SerializeField]
-    private float detectionRadius = 5f;
+    private GameObject targetFish;
 
     // Start is called before the first frame update
     void Start()
@@ -18,24 +17,24 @@ public class PenguinAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // TODO
-    }
-
-    public void fishDropped(Vector3 position)
-    {
-        var distance = Vector3.Distance(position, transform.position);
-        if (distance > detectionRadius)
+        if (agent.remainingDistance < 1f)
         {
-            Debug.Log("too far away");
-            return;
+            if (targetFish is not null)
+            {
+                var fishScript = targetFish.GetComponent<Fish>();
+                if (fishScript is not null)
+                {
+                    fishScript.eaten();
+                    targetFish = null;
+                }
+                agent.ResetPath();
+            }
         }
-
-        agent.SetDestination(position);
     }
 
-    void OnDrawGizmosSelected()
+    public void fishNearby(GameObject fish)
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        agent.SetDestination(fish.transform.position);
+        targetFish = fish;
     }
 }
