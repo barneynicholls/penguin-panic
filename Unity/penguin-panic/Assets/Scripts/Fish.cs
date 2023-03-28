@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class Fish : MonoBehaviour
 {
@@ -8,6 +9,10 @@ public class Fish : MonoBehaviour
     private GameObject[] agents = new GameObject[0];
 
     private bool hasLanded = false;
+
+    public Guid guid;
+
+    void Start() => guid = Guid.NewGuid();
 
     // Update is called once per frame
     void Update()
@@ -26,14 +31,28 @@ public class Fish : MonoBehaviour
                 {
                     continue;
                 }
+
                 agentScript.fishNearby(gameObject);
             } 
         }
     }
 
-    internal void eaten()
+    internal void eaten(GameObject eatenBy)
     {
         hasLanded = false;
+        foreach (var agent in agents)
+
+        {
+            if(agent == eatenBy)
+            {
+                continue;
+            }
+            var agentScript = agent.GetComponent<PenguinAI>(); 
+            if (agentScript is not null)
+            {
+                agentScript.fishEaten(gameObject);
+            }
+        }
         Destroy(gameObject);
     }
 
