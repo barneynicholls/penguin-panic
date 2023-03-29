@@ -85,7 +85,7 @@ public class PenguinAI : MonoBehaviour
     bool canSeeFish(GameObject target)
     {
         Vector3 rayToTarget = target.transform.position - eyes.transform.position;
-        float  lookAngle = Vector3.Angle(eyes.transform.forward, rayToTarget);
+        float lookAngle = Vector3.Angle(eyes.transform.forward, rayToTarget);
         if (lookAngle < 60f && Physics.Raycast(eyes.transform.position, rayToTarget, out var hitInfo))
         {
             Debug.DrawRay(eyes.transform.position, rayToTarget, Color.green);
@@ -106,21 +106,26 @@ public class PenguinAI : MonoBehaviour
 
         bool fishIsVisible = canSeeFish(fish);
 
-        if (!fishIsVisible || (!fishIsVisible && distance > smellDistance))
-        {
-            return;
-        }
+        bool canSmellFish = distance < smellDistance;
 
-        if (targetFish is not null)
-        {
-            var distanceToCurrentTarget = Vector3.Distance(transform.position, targetFish.transform.position);
-            if (distanceToCurrentTarget < distance)
-                return;
-        }
+        Debug.Log($"distance:{distance:F2}/{smellDistance:F2} canSmell: {canSmellFish} canSee:{fishIsVisible}");
 
-        agent.speed = normalSpeed;
-        Seek(fish.transform.position);
-        targetFish = fish;
+        if (fishIsVisible || canSmellFish)
+        {
+
+            if (targetFish is not null)
+            {
+                var distanceToCurrentTarget = Vector3.Distance(transform.position, targetFish.transform.position);
+                if (distanceToCurrentTarget < distance)
+                {
+                    return;
+                }
+            }
+
+            agent.speed = normalSpeed;
+            Seek(fish.transform.position);
+            targetFish = fish;
+        }
     }
 
     private void OnDrawGizmos()
