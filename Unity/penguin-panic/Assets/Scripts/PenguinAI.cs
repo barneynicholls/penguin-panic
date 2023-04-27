@@ -34,26 +34,25 @@ public class PenguinAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (targetFish is null && !isWandering)
+        if (targetFish == null && !isWandering)
         {
             Wander();
         }
 
         if (agent.remainingDistance < 1f)
         {
-            isWandering = false;
-
-            if (targetFish is not null)
+            if (targetFish != null && !isWandering)
             {
-                var fishScript = targetFish.GetComponent<Fish>();
-                if (fishScript is not null)
+                var distanceToFish = Vector3.Distance(transform.position, targetFish.transform.position);
+
+                if (distanceToFish < 0.75f && targetFish.TryGetComponent<Fish>(out var fishScript))
                 {
                     fishScript.eaten(gameObject);
                     targetFish = null;
                 }
                 Wander();
             }
-
+            isWandering = false;
         }
     }
 
@@ -89,7 +88,7 @@ public class PenguinAI : MonoBehaviour
         if (lookAngle < 60f && Physics.Raycast(eyes.transform.position, rayToTarget, out var hitInfo))
         {
             Debug.DrawRay(eyes.transform.position, rayToTarget, Color.green);
-            return hitInfo.transform.gameObject.tag == "fish";
+            return hitInfo.transform.gameObject.CompareTag("fish");
         }
         return false;
     }
@@ -108,12 +107,12 @@ public class PenguinAI : MonoBehaviour
 
         bool canSmellFish = distance < smellDistance;
 
-        Debug.Log($"distance:{distance:F2}/{smellDistance:F2} canSmell: {canSmellFish} canSee:{fishIsVisible}");
+      //  Debug.Log($"distance:{distance:F2}/{smellDistance:F2} canSmell: {canSmellFish} canSee:{fishIsVisible}");
 
         if (fishIsVisible || canSmellFish)
         {
 
-            if (targetFish is not null)
+            if (targetFish != null)
             {
                 var distanceToCurrentTarget = Vector3.Distance(transform.position, targetFish.transform.position);
                 if (distanceToCurrentTarget < distance)
@@ -123,8 +122,8 @@ public class PenguinAI : MonoBehaviour
             }
 
             agent.speed = normalSpeed;
-            Seek(fish.transform.position);
             targetFish = fish;
+            Seek(fish.transform.position);
         }
     }
 

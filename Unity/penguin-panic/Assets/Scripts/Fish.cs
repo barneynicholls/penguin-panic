@@ -39,6 +39,7 @@ public class Fish : MonoBehaviour
 
     internal void eaten(GameObject eatenBy)
     {
+        Debug.Log(nameof(eaten));
         hasLanded = false;
         foreach (var agent in agents)
 
