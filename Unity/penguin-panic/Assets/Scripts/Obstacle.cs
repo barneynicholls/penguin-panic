@@ -31,6 +31,7 @@ public class Obstacle : MonoBehaviour
 
     // nested colliders are a no go
     // might need to script and register each one with parent script
+    // another option would be ontrigger stay and check distances
 
     void Start()
     {
