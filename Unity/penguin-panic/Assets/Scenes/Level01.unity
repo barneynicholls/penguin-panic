@@ -167,6 +167,10 @@ MonoBehaviour:
   wanderRadius: 10
   wanderDistance: 20
   wanderJitter: 1
+  fleeRadius: 20
+  fleeSpeed: 15
+  fleeAngularSpeed: 300
+  fleeDetectionRadius: 5
   smellDistance: 5
   eyes: {fileID: 652211945}
 --- !u!1001 &62090299
@@ -471,6 +475,10 @@ MonoBehaviour:
   wanderRadius: 10
   wanderDistance: 20
   wanderJitter: 1
+  fleeRadius: 20
+  fleeSpeed: 15
+  fleeAngularSpeed: 300
+  fleeDetectionRadius: 5
   smellDistance: 5
   eyes: {fileID: 1945556021}
 --- !u!1001 &157064715
@@ -789,6 +797,10 @@ MonoBehaviour:
   wanderRadius: 10
   wanderDistance: 20
   wanderJitter: 1
+  fleeRadius: 20
+  fleeSpeed: 15
+  fleeAngularSpeed: 300
+  fleeDetectionRadius: 5
   smellDistance: 5
   eyes: {fileID: 1776863088}
 --- !u!1001 &244109042
@@ -1638,6 +1650,10 @@ MonoBehaviour:
   wanderRadius: 10
   wanderDistance: 20
   wanderJitter: 1
+  fleeRadius: 20
+  fleeSpeed: 15
+  fleeAngularSpeed: 300
+  fleeDetectionRadius: 5
   smellDistance: 5
   eyes: {fileID: 1977661975}
 --- !u!195 &652508062
@@ -3830,6 +3846,10 @@ MonoBehaviour:
   wanderRadius: 10
   wanderDistance: 20
   wanderJitter: 1
+  fleeRadius: 20
+  fleeSpeed: 15
+  fleeAngularSpeed: 300
+  fleeDetectionRadius: 5
   smellDistance: 5
   eyes: {fileID: 1196367536}
 --- !u!1001 &1563517381
@@ -4246,6 +4266,10 @@ MonoBehaviour:
   wanderRadius: 10
   wanderDistance: 20
   wanderJitter: 1
+  fleeRadius: 20
+  fleeSpeed: 15
+  fleeAngularSpeed: 300
+  fleeDetectionRadius: 5
   smellDistance: 5
   eyes: {fileID: 689326777}
 --- !u!1001 &1728438711

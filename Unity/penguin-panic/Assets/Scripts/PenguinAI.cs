@@ -1,6 +1,8 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class PenguinAI : MonoBehaviour
@@ -13,6 +15,15 @@ public class PenguinAI : MonoBehaviour
     private float wanderJitter = 1f;
 
     [SerializeField]
+    private float fleeRadius = 20f;
+    [SerializeField]
+    private float fleeSpeed = 15f;
+    [SerializeField]
+    private float fleeAngularSpeed = 300f;
+    [SerializeField]
+    private float fleeDetectionRadius = 5f;
+
+    [SerializeField]
     private float smellDistance = 5.0f;
 
     [SerializeField]
@@ -20,8 +31,13 @@ public class PenguinAI : MonoBehaviour
 
     private NavMeshAgent agent;
     private GameObject targetFish;
+
     private Vector3 wanderTarget = Vector3.zero;
     private bool isWandering = false;
+
+    private DateTime fleeTime;
+    private bool isFleeing;
+
     private float normalSpeed;
 
     // Start is called before the first frame update
@@ -37,6 +53,16 @@ public class PenguinAI : MonoBehaviour
         if (targetFish == null && !isWandering)
         {
             Wander();
+        }
+        else if (isFleeing)
+        {
+            if (agent.remainingDistance < 1 || (DateTime.Now - fleeTime) > TimeSpan.FromSeconds(5))
+            {
+                Debug.Log("reached flee point");
+
+                isFleeing = false;
+                Wander();
+            }
         }
 
         if (agent.remainingDistance < 1f)
@@ -79,6 +105,43 @@ public class PenguinAI : MonoBehaviour
     void Seek(Vector3 position)
     {
         agent.SetDestination(position);
+    }
+
+    void Flee(Vector3 point)
+    {
+        if (isFleeing)
+        {
+            Debug.Log("already fleeing");
+            return;
+        }
+
+        Debug.Log("flee");
+        var distance = Vector3.Distance(point, transform.position);
+        if (distance > fleeDetectionRadius)
+        {
+            Debug.Log("too far away");
+            return;
+        }
+
+        var fleeDirection = (transform.position - point).normalized;
+        var newGoal = transform.position + fleeDirection * fleeRadius;
+
+        var path = new NavMeshPath();
+        agent.CalculatePath(newGoal, path);
+
+        if (path.status != NavMeshPathStatus.PathInvalid)
+        {
+            Debug.Log("fleeing");
+            isFleeing = true;
+            fleeTime = DateTime.Now;
+            agent.speed = fleeSpeed;
+            agent.angularSpeed = fleeAngularSpeed;
+            agent.SetDestination(path.corners[path.corners.Length - 1]);
+        }
+        else
+        {
+            Debug.Log("invalid path");
+        }
     }
 
     bool canSeeFish(GameObject target)
