@@ -13,6 +13,8 @@ public class PenguinAI : MonoBehaviour
     private float wanderDistance = 20f;
     [SerializeField]
     private float wanderJitter = 1f;
+    [SerializeField]
+    private float wanderSpeed = .5f;
 
     [SerializeField]
     private float fleeRadius = 20f;
@@ -84,6 +86,8 @@ public class PenguinAI : MonoBehaviour
 
     void Wander()
     {
+        // TOOD this is getting called all the time
+        // Debug.Log($"wandering: {gameObject.name}");
         isWandering = true;
 
         wanderTarget += new Vector3(
@@ -97,7 +101,7 @@ public class PenguinAI : MonoBehaviour
         Vector3 targetLocal = wanderTarget + new Vector3(0, 0, wanderDistance);
         Vector3 targetWorld = gameObject.transform.InverseTransformVector(targetLocal);
 
-        agent.speed = normalSpeed * 0.3f;
+        agent.speed = normalSpeed * wanderSpeed;
 
         Seek(targetWorld);
     }
