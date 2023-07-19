@@ -11,14 +11,10 @@ public class Obstacle : MonoBehaviour
     [SerializeField]
     private GameObject safePrefab;
     [SerializeField]
-    private GameObject warningPrefab;
-    [SerializeField]
     private GameObject dangerPrefab;
 
     [SerializeField]
-    private float safeRadius = 15f;
-    [SerializeField]
-    private float dangerRadius = 5f;
+    private float dangerRadius = 10f;
 
     private SphereCollider detectionCollider;
 
@@ -28,51 +24,47 @@ public class Obstacle : MonoBehaviour
 
         detectionCollider = GetComponent<SphereCollider>();
         detectionCollider.enabled = true;
-        detectionCollider.radius = safeRadius;
+        detectionCollider.radius = dangerRadius;
         detectionCollider.isTrigger = true;
     }
 
     void Update()
     {
         safePrefab.SetActive(currentState == ObstacleState.Safe);
-        warningPrefab.SetActive(currentState == ObstacleState.Warning);
         dangerPrefab.SetActive(currentState == ObstacleState.Danger);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "agent")
+        if (other.gameObject.CompareTag("agent"))
         {
-            currentState = ObstacleState.Warning;
+            Debug.Log(nameof(OnTriggerEnter));
+            currentState = ObstacleState.Danger;
+            var agentScript = other.gameObject.GetComponent<PenguinAI>();
+                agentScript.Flee(transform.position);
         }
     }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("agent"))
+        {
+            Debug.Log(nameof(OnTriggerExit));
 
+            currentState = ObstacleState.Safe;
+        }
+    }
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "agent")
+        if (other.gameObject.CompareTag("agent"))
         {
-            var distanceToAgent = Vector3.Distance(transform.position, other.gameObject.transform.position);
-            Debug.Log($"{distanceToAgent}");
+            Debug.Log(nameof(OnTriggerStay));
 
-            if (distanceToAgent > safeRadius)
-                currentState = ObstacleState.Safe;
-
-            if (distanceToAgent <= safeRadius)
-                currentState = ObstacleState.Warning;
-
-            if (distanceToAgent <= dangerRadius)
-            {
-                currentState = ObstacleState.Danger;
-                var agentScript = other.gameObject.GetComponent<PenguinAI>();
-                agentScript.Flee(transform.position);
-            }
+            currentState = ObstacleState.Danger;
         }
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, safeRadius);
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, dangerRadius);
     }
@@ -81,6 +73,5 @@ public class Obstacle : MonoBehaviour
 public enum ObstacleState
 {
     Safe,
-    Warning,
     Danger
 }
