@@ -8,20 +8,24 @@ public class ClickToDropFish : MonoBehaviour
     [SerializeField]
     private GameObject mousePositionPrefab;
 
+    LayerMask mask;
+
     private GameObject[] agents;
 
     // Start is called before the first frame update
     void Start()
     {
         agents = GameObject.FindGameObjectsWithTag("agent");
+        mask = LayerMask.GetMask("Scenery");
     }
 
     private GameObject mousePositionInstance = null;
 
+
     // Update is called once per frame
     void Update()
     {
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit, 10000f, mask))
         {
             var position = hit.point;
 
@@ -48,7 +52,7 @@ public class ClickToDropFish : MonoBehaviour
         }
 
 
-        
+
 
     }
 }

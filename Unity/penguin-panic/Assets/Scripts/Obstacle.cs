@@ -18,30 +18,18 @@ public class Obstacle : MonoBehaviour
     [SerializeField]
     private float safeRadius = 15f;
     [SerializeField]
-    private float warningRadius = 10f;
-    [SerializeField]
     private float dangerRadius = 5f;
 
-    [SerializeField]
-    private SphereCollider safeCollider;
-    [SerializeField]
-    private SphereCollider warningCollider;
-    [SerializeField]
-    private SphereCollider dangerCollider;
-
-    // nested colliders are a no go
-    // might need to script and register each one with parent script
-    // another option would be ontrigger stay and check distances
+    private SphereCollider detectionCollider;
 
     void Start()
     {
         currentState = initialState;
-        safeCollider.radius = safeRadius;
-        safeCollider.isTrigger = true;
-        warningCollider.radius = safeRadius;
-        warningCollider.isTrigger = true;
-        dangerCollider.radius = safeRadius;
-        dangerCollider.isTrigger = true;
+
+        detectionCollider = GetComponent<SphereCollider>();
+        detectionCollider.enabled = true;
+        detectionCollider.radius = safeRadius;
+        detectionCollider.isTrigger = true;
     }
 
     void Update()
@@ -53,19 +41,38 @@ public class Obstacle : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "agent")
+        if (other.gameObject.tag == "agent")
         {
-            Debug.Log(other.gameObject.name);
+            currentState = ObstacleState.Warning;
         }
-        
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.tag == "agent")
+        {
+            var distanceToAgent = Vector3.Distance(transform.position, other.gameObject.transform.position);
+            Debug.Log($"{distanceToAgent}");
+
+            if (distanceToAgent > safeRadius)
+                currentState = ObstacleState.Safe;
+
+            if (distanceToAgent <= safeRadius)
+                currentState = ObstacleState.Warning;
+
+            if (distanceToAgent <= dangerRadius)
+            {
+                currentState = ObstacleState.Danger;
+                var agentScript = other.gameObject.GetComponent<PenguinAI>();
+                agentScript.Flee(transform.position);
+            }
+        }
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, safeRadius);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, warningRadius);
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, dangerRadius);
     }

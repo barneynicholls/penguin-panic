@@ -111,7 +111,7 @@ public class PenguinAI : MonoBehaviour
         agent.SetDestination(position);
     }
 
-    void Flee(Vector3 point)
+    public void Flee(Vector3 point)
     {
         if (isFleeing)
         {

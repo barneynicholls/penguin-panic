@@ -107,8 +107,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8811537816796066610}
-  - component: {fileID: 8719058422430972407}
-  - component: {fileID: 2911804144958333794}
   - component: {fileID: 580023887520782361}
   - component: {fileID: 162841392392482653}
   - component: {fileID: 7643011019997969472}
@@ -137,32 +135,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &8719058422430972407
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5881449016329787508}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &2911804144958333794
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5881449016329787508}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 20
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &580023887520782361
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -172,7 +144,7 @@ SphereCollider:
   m_GameObject: {fileID: 5881449016329787508}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 30
   m_Center: {x: 0, y: 0, z: 0}
@@ -193,11 +165,7 @@ MonoBehaviour:
   warningPrefab: {fileID: 6804778169125615088}
   dangerPrefab: {fileID: 3081460318630959987}
   safeRadius: 30
-  warningRadius: 20
-  dangerRadius: 5
-  safeCollider: {fileID: 580023887520782361}
-  warningCollider: {fileID: 2911804144958333794}
-  dangerCollider: {fileID: 8719058422430972407}
+  dangerRadius: 20
 --- !u!54 &7643011019997969472
 Rigidbody:
   m_ObjectHideFlags: 0
